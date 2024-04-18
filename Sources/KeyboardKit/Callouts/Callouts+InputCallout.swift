@@ -3,38 +3,34 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-01-06.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
 
 public extension Callouts {
-    /**
-     This callout can be used to show the currently typed action
-     above the pressed keyboard button.
-     */
+    
+    /// This callout can show the pressed char in a callout.
+    ///
+    /// In iOS, this callout is presented when a button with
+    /// an input character is pressed.
     struct InputCallout: View {
         
-        /**
-         Create an input callout.
-         
-         - Parameters:
-           - calloutContext: The callout context to use.
-           - keyboardContext: The keyboard context to use.
-           - style: The style to apply to the view, by default ``KeyboardStyle/InputCallout/standard``.
-         */
+        /// Create a custom input callout.
+        ///
+        /// - Parameters:
+        ///   - calloutContext: The callout context to use.
+        ///   - keyboardContext: The keyboard context to use.
         public init(
             calloutContext: Context,
-            keyboardContext: KeyboardContext,
-            style: Style = .standard
+            keyboardContext: KeyboardContext
         ) {
             self._calloutContext = ObservedObject(wrappedValue: calloutContext)
             self._keyboardContext = ObservedObject(wrappedValue: keyboardContext)
-            self.style = style
+            self.initStyle = nil
         }
         
         public typealias Context = CalloutContext.InputContext
-        public typealias Style = KeyboardStyle.InputCallout
         
         @ObservedObject
         private var calloutContext: Context
@@ -42,7 +38,8 @@ public extension Callouts {
         @ObservedObject
         private var keyboardContext: KeyboardContext
         
-        private let style: Style
+        @Environment(\.inputCalloutStyle)
+        private var envStyle
         
         public var body: some View {
             callout
@@ -52,6 +49,23 @@ public extension Callouts {
                 .position(position)
                 .allowsHitTesting(false)
         }
+        
+        // MARK: - Deprecated
+        
+        @available(*, deprecated, message: "Use .inputCalloutStyle to apply the style instead.")
+        public init(
+            calloutContext: Context,
+            keyboardContext: KeyboardContext,
+            style: Callouts.InputCalloutStyle = .standard
+        ) {
+            self._calloutContext = ObservedObject(wrappedValue: calloutContext)
+            self._keyboardContext = ObservedObject(wrappedValue: keyboardContext)
+            self.initStyle = style
+        }
+        
+        private typealias Style = Callouts.InputCalloutStyle
+        private let initStyle: Style?
+        private var style: Style { initStyle ?? envStyle }
     }
 }
 
@@ -75,10 +89,8 @@ private extension Callouts.InputCallout {
     }
     
     var calloutButton: some View {
-        Callouts.ButtonArea(
-            frame: buttonFrame,
-            style: style.callout
-        )
+        ButtonArea(frame: buttonFrame)
+            .calloutStyle(style.callout)
     }
 }
 
@@ -146,12 +158,12 @@ private extension Callouts.InputCallout {
 // MARK: - Previews
 
 #if os(iOS) || os(macOS) || os(watchOS)
-struct Callouts_InputCallout_Previews: PreviewProvider {
+#Preview {
 
     struct Preview: View {
 
-        var style: KeyboardStyle.InputCallout {
-            var style = KeyboardStyle.InputCallout.standard
+        var style: Callouts.InputCalloutStyle {
+            var style = Callouts.InputCalloutStyle.standard
             style.callout.backgroundColor = .blue
             style.callout.textColor = .white
             style.callout.buttonInset = CGSize(width: 3, height: 3)
@@ -169,7 +181,7 @@ struct Callouts_InputCallout_Previews: PreviewProvider {
                     label: { _ in Color.red.cornerRadius(5) }
                 )
             }
-            .frame(width: 15, height: 15)
+            .frame(width: 40, height: 40)
             .padding()
             .background(Color.yellow.cornerRadius(6))
         }
@@ -201,8 +213,9 @@ struct Callouts_InputCallout_Previews: PreviewProvider {
         }
     }
 
-    static var previews: some View {
-        Preview()
-    }
+    return Preview()
+        .inputCalloutStyle(.init(
+            callout: .init(backgroundColor: .red)
+        ))
 }
 #endif

@@ -3,23 +3,23 @@
 //  KeyboardPro
 //
 //  Created by Daniel Saidi on 2022-12-21.
-//  Copyright © 2022-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2022-2024 Daniel Saidi. All rights reserved.
 //
 
 import KeyboardKitPro
 
-/**
- This demo-specific provider inherits the standard one, then
- adds a locale button next to space.
-
- ``KeyboardViewController`` registers this class to show you
- how you can set up a custom layout provider.
-
- The locale button is only be added if the keyboard has many
- locales. By default, KeyboardKit Pro automatically adds all
- locales that are available in the license.
- */
-class DemoLayoutProvider: StandardKeyboardLayoutProvider {
+/// This provider inherits the standard provider, then makes
+/// demo-specific adjustments to the standard layout.
+///
+/// The provider will inject a locale switcher to the layout,
+/// if the keyboard context has many locales. 
+///
+/// Uncomment the `tryInsertDictationButton` call on line 26
+/// to inject a dictation button into the layout.
+///
+/// The ``KeyboardViewController`` shows how you can replace
+/// the standard provider with this custom one.
+class DemoLayoutProvider: KeyboardLayout.StandardProvider {
 
     override func keyboardLayout(for context: KeyboardContext) -> KeyboardLayout {
         let layout = super.keyboardLayout(for: context)

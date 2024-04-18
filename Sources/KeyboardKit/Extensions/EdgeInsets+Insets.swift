@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2020-12-02.
-//  Copyright © 2020-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2020-2024 Daniel Saidi. All rights reserved.
 //
 
 import CoreGraphics
@@ -12,10 +12,24 @@ import SwiftUI
 extension EdgeInsets {
     
     init(
+        all value: CGFloat
+    ) {
+        self.init(
+            horizontal: value,
+            vertical: value
+        )
+    }
+    
+    init(
         horizontal: CGFloat,
         vertical: CGFloat
     ) {
-        self.init(top: vertical, leading: horizontal, bottom: vertical, trailing: horizontal)
+        self.init(
+            top: vertical,
+            leading: horizontal,
+            bottom: vertical,
+            trailing: horizontal
+        )
     }
     
     init(
@@ -32,5 +46,5 @@ extension EdgeInsets {
         )
     }
 
-    static let zero = Self.init(optionalTop: 0)
+    static let zero = Self.init(all: 0)
 }

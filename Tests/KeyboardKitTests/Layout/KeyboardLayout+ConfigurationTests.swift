@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-10-01.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import XCTest
@@ -15,7 +15,7 @@ class KeyboardLayout_ConfigurationTests: XCTestCase {
     func testStandardConfigurationIsCorrectForiPadInPortrait() {
         let config = KeyboardLayout.Configuration.standardPad
         XCTAssertEqual(config.buttonCornerRadius, 5)
-        XCTAssertEqual(config.buttonInsets, .init(horizontal: 6, vertical: 4))
+        XCTAssertEqual(config.buttonInsets, .init(horizontal: 5, vertical: 4))
         XCTAssertEqual(config.rowHeight, 64)
     }
     
@@ -75,7 +75,7 @@ class KeyboardLayout_ConfigurationTests: XCTestCase {
 
         config = configuration(for: .pad, size: .iPadScreenPortrait, orientation: .portrait)
         XCTAssertEqual(config.buttonCornerRadius, 5)
-        XCTAssertEqual(config.buttonInsets, .init(horizontal: 6, vertical: 4))
+        XCTAssertEqual(config.buttonInsets, .init(horizontal: 5, vertical: 4))
         XCTAssertEqual(config.rowHeight, 64)
 
 

@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2020-07-01.
-//  Copyright © 2020-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2020-2024 Daniel Saidi. All rights reserved.
 //
 
 import CoreGraphics
@@ -11,7 +11,7 @@ import SwiftUI
 
 public extension KeyboardAction {
     
-    /// The action's standard button image.
+    /// The standard button image for the action.
     func standardButtonImage(
         for context: KeyboardContext
     ) -> Image? {
@@ -21,7 +21,7 @@ public extension KeyboardAction {
         }
     }
     
-    /// The action's standard button text.
+    /// The standard button text for the action.
     func standardButtonText(
         for context: KeyboardContext
     ) -> String? {

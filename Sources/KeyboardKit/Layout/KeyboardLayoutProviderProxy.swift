@@ -1,20 +1,19 @@
 //
-//  DeviceKeyboardLayoutProvider.swift
+//  KeyboardLayoutProviderProxy.swift
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-02-16.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
 
-/**
- This protocol extends ``KeyboardLayoutProvider`` and lets a
- provider resolve layouts with different providers.
-
- For now, the protocol lets you switch provider based on the
- current device type.
- */
+/// This protocol is a help protocol that makes device-based
+/// layout providers share behavior when basing their layout
+/// on different device types.
+///
+/// The protocol is currently only used by localized service
+/// implementations in KeyboardKit Pro.
 public protocol KeyboardLayoutProviderProxy: KeyboardLayoutProvider {
     
     /// The layout provider to use for iPad devices.
@@ -27,11 +26,13 @@ public protocol KeyboardLayoutProviderProxy: KeyboardLayoutProvider {
 public extension KeyboardLayoutProviderProxy {
     
     /// The keyboard layout provider to use for the context.
-    func keyboardLayoutProvider(for context: KeyboardContext) -> KeyboardLayoutProvider {
+    func keyboardLayoutProvider(
+        for context: KeyboardContext
+    ) -> KeyboardLayoutProvider {
         switch context.deviceType {
-        case .phone: return iPhoneProvider
-        case .pad: return iPadProvider
-        default: return iPhoneProvider
+        case .phone: iPhoneProvider
+        case .pad: iPadProvider
+        default: iPhoneProvider
         }
     }
 }

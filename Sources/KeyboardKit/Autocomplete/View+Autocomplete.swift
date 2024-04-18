@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2023-12-06.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
@@ -45,11 +45,8 @@ public extension Autocomplete {
 
 public extension View {
 
-    /**
-     This view modifier can be applied to any view, to honor
-     `.autocorrectionDisabled()` by disabling autocorrect in
-     the provided context.
-     */
+    /// This modifier can be applied to any view, to make it
+    /// honor `.autocorrectionDisabled()`.
     func autocorrectionDisabled(
         with context: AutocompleteContext
     ) -> some View {

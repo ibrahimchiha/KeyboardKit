@@ -3,16 +3,14 @@
 //  Keyboard
 //
 //  Created by Daniel Saidi on 2022-02-07.
-//  Copyright © 2022-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2022-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
 import KeyboardKit
 
-/**
- This fake autocomplete provider is used in the non-pro demo,
- to show fake suggestions while typing.
- */
+/// This fake provider is used in the non-pro demo, and will
+/// show fake suggestions while typing.
 class FakeAutocompleteProvider: AutocompleteProvider {
 
     init(context: AutocompleteContext) {

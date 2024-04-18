@@ -3,17 +3,15 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2019-10-15.
-//  Copyright © 2019-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2019-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
 
 public extension Gestures {
  
-    /**
-     This enum defines various keyboard gestures that can be
-     used to interact with a keyboard.
-     */
+    /// This enum defines various keyboard gestures that can
+    /// be used to interact with a keyboard.
     enum KeyboardGesture: String, CaseIterable, Codable, Equatable, Identifiable {
 
         /// Triggers when a button is double tapped.
@@ -27,10 +25,19 @@ public extension Gestures {
         
         /// Triggers when a button is long pressed.
         case longPress
-
+        
         /// Triggers repeatedly when a button is pressed & held.
         case repeatPress
+        
+        /// Triggers when a button gesture ends.
+        case end
     }
+}
+
+public extension Gestures.KeyboardGesture {
+    
+    /// A ``Gestures/KeyboardGesture/repeatPress`` shorthand.
+    static let `repeat` = repeatPress
 }
 
 public extension Gestures.KeyboardGesture {

@@ -3,13 +3,13 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-01-28.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
 import SwiftUI
 
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(visionOS)
 public extension KeyboardInputViewController {
 
     static var preview: KeyboardInputViewController {
@@ -26,24 +26,24 @@ public extension KeyboardPreviews {
 }
 #endif
 
-public extension Keyboard.KeyboardServices {
+public extension Keyboard.Services {
     
-    static var preview: Keyboard.KeyboardServices {
-        #if os(iOS) || os(tvOS)
+    static var preview: Keyboard.Services {
+        #if os(iOS) || os(tvOS) || os(visionOS)
         KeyboardInputViewController.preview.services
         #else
-        Keyboard.KeyboardServices(state: .preview)
+        Keyboard.Services(state: .preview)
         #endif
     }
 }
 
-public extension Keyboard.KeyboardState {
+public extension Keyboard.State {
     
-    static var preview: Keyboard.KeyboardState {
-        #if os(iOS) || os(tvOS)
+    static var preview: Keyboard.State {
+        #if os(iOS) || os(tvOS) || os(visionOS)
         KeyboardInputViewController.preview.state
         #else
-        Keyboard.KeyboardState()
+        Keyboard.State()
         #endif
     }
 }
@@ -51,7 +51,7 @@ public extension Keyboard.KeyboardState {
 public extension KeyboardContext {
     
     static var preview: KeyboardContext {
-        #if os(iOS) || os(tvOS)
+        #if os(iOS) || os(tvOS) || os(visionOS)
         let context = KeyboardContext()
         context.sync(with: .preview)
         return context

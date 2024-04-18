@@ -3,17 +3,21 @@
 //  Keyboard
 //
 //  Created by Daniel Saidi on 2021-02-11.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import KeyboardKit
 import UIKit
 
-/**
- This demo-specific action handler inherits the standard one
- and adds demo-specific image logic to it.
- */
-class DemoActionHandler: StandardKeyboardActionHandler {
+/// This action handler inherits the standard one, and makes
+/// demo-specific adjustments to the standard handling.
+///
+/// You can play around with the class and customize it more,
+/// to see how it affects the demo keyboard.
+///
+/// The ``KeyboardViewController`` shows how you can replace
+/// the standard handler with this custom one.
+class DemoActionHandler: KeyboardAction.StandardHandler {
 
 
     // MARK: - Overrides
@@ -33,17 +37,21 @@ class DemoActionHandler: StandardKeyboardActionHandler {
     
     // MARK: - Custom actions
     
-    func longPressAction(for action: KeyboardAction) -> KeyboardAction.GestureAction? {
+    func longPressAction(
+        for action: KeyboardAction
+    ) -> KeyboardAction.GestureAction? {
         switch action {
-        case .image(_, _, let imageName): return { [weak self] _ in self?.saveImage(named: imageName) }
-        default: return nil
+        case .image(_, _, let imageName): { [weak self] _ in self?.saveImage(named: imageName) }
+        default: nil
         }
     }
     
-    func releaseAction(for action: KeyboardAction) -> KeyboardAction.GestureAction? {
+    func releaseAction(
+        for action: KeyboardAction
+    ) -> KeyboardAction.GestureAction? {
         switch action {
-        case .image(_, _, let imageName): return { [weak self] _ in self?.copyImage(named: imageName) }
-        default: return nil
+        case .image(_, _, let imageName): { [weak self] _ in self?.copyImage(named: imageName) }
+        default: nil
         }
     }
     
@@ -51,7 +59,7 @@ class DemoActionHandler: StandardKeyboardActionHandler {
     // MARK: - Functions
     
     func alert(_ message: String) {
-        print("Implement alert functionality if you want, or just place a breakpoint here.")
+        print("Implement alert functionality if you want.")
     }
     
     func copyImage(named imageName: String) {

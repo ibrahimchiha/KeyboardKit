@@ -3,14 +3,18 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2023-03-21.
-//  Copyright © 2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2023-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
 
 public extension Dictation {
     
-    /// This service can be used to disable dictation.
+    /// This class is used as the default service, until you
+    /// register a custom implementation or register a valid
+    /// KeyboardKit Pro license key.
+    ///
+    /// See <doc:Dictation-Article> for more information.
     class DisabledKeyboardService: KeyboardDictationService {
         
         public init(context: DictationContext) {

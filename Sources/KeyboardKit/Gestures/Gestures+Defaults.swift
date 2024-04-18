@@ -3,16 +3,14 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2022-11-24.
-//  Copyright © 2022-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2022-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
 
 public extension Gestures {
     
-    /**
-     This type has default gesture values.
-     */
+    /// This type defines default gesture values.
     struct Defaults {
         
         /// The max time between two taps for them to count as a double tap, by default `0.2`.

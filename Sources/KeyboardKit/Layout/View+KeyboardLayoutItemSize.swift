@@ -3,24 +3,22 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2023-09-19.
-//  Copyright © 2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2023-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
 
 public extension View {
     
-    /**
-     Apply a keyboard layout item size to the view.
-     
-     The `edgeInsets` parameter can be used to add intrinsic
-     edge insets within the interactable button area.
-     
-     - Parameters:
-       - item: The layout item to apply.
-       - rowWidth: The total row width (often screen width).
-       - inputWidth: The width in points of an input item.
-     */
+    /// Apply a keyboard layout item size to the view.
+    ///
+    /// The `edgeInsets` can be used to add intrinsic insets
+    /// within the interactable button area.
+    ///
+    /// - Parameters:
+    ///   - item: The layout item to apply.
+    ///   - rowWidth: The total row width (often screen width).
+    ///   - inputWidth: The width in points of an input item.
     func keyboardLayoutItemSize(
         for item: KeyboardLayout.Item,
         rowWidth: CGFloat,

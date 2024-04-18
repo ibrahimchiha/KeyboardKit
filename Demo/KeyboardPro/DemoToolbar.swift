@@ -3,19 +3,18 @@
 //  KeyboardPro
 //
 //  Created by Daniel Saidi on 2023-11-27.
-//  Copyright © 2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2023-2024 Daniel Saidi. All rights reserved.
 //
 
 import KeyboardKitPro
 import SwiftUI
 
-/**
- This demo uses a KeyboardKit Pro `ToggleToolbar` that shows
- a main toolbar, but can switch to an alternate one.
- 
- The demo uses the standard autocomplete toolbar as the main
- toolbar, and this custom one as the alternate one.
- */
+/// This demo-specific toolbar uses a Pro `ToggleToolbar` to
+/// toggle between a main autocomplete toolbar and this one.
+///
+/// This view has text fields that let you test routing text
+/// fields, as well as buttons to trigger certain operations
+/// like picking themes, open settings, etc.
 struct DemoToolbar: View {
     
     unowned var controller: KeyboardInputViewController
@@ -26,10 +25,13 @@ struct DemoToolbar: View {
     var proxy: UITextDocumentProxy
     
     @State
-    private var fullDocumentContext: String?
+    private var fullDocumentContext = ""
     
     @State
     private var isThemePickerPresented = false
+    
+    @State
+    private var isFullDocumentContextActive = false
     
     @FocusState
     private var isTextFieldFocused
@@ -48,7 +50,7 @@ struct DemoToolbar: View {
         .padding(10)
         .font(.headline)
         .buttonStyle(.bordered)
-        .sheet(item: $fullDocumentContext, content: fullDocumentContextSheet)
+        .sheet(isPresented: $isFullDocumentContextActive, content: fullDocumentContextSheet)
         .sheet(isPresented: $isThemePickerPresented, content: themePickerSheet)
     }
 }
@@ -68,16 +70,17 @@ private extension DemoToolbar {
         }
     }
     
-    func fullDocumentContextSheet(text: String?) -> some View {
+    func fullDocumentContextSheet() -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(text ?? "-")
+            Text(fullDocumentContext)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding()
         .demoSheet("Full Document Reader")
     }
     
     func themePickerSheet() -> some View {
-        KeyboardTheme.ShelfView(
+        KeyboardTheme.Shelf(
             themes: KeyboardTheme.allPredefined
         ) { theme in
             self.theme = theme
@@ -86,7 +89,7 @@ private extension DemoToolbar {
                 .font(.callout.bold())
                 .frame(maxWidth: .infinity, alignment: .leading)
         } item: { theme in
-            KeyboardTheme.ShelfViewItem(theme: theme)
+            KeyboardTheme.ShelfItem(theme: theme)
                 .shadow(radius: 1, x: 0, y: 1)
                 .padding(.vertical, 3)
         }
@@ -111,6 +114,7 @@ private extension DemoToolbar {
     }
     
     func readFullDocumentContext() {
+        isFullDocumentContextActive = true
         fullDocumentContext = "Reading..."
         Task {
             let result = try await proxy.fullDocumentContext()

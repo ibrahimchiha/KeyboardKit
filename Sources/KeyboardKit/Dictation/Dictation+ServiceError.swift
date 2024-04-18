@@ -3,17 +3,17 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2023-03-21.
-//  Copyright © 2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2023-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
 
 public extension Dictation {
     
-    /**
-     This enum defines service errors, that can be thrown by
-     a ``DictationService`` or ``KeyboardDictationService``.
-     */
+    /// This enum defines dictation service errors.
+    ///
+    /// These errors can be thrown by a ``DictationService``
+    /// or a ``KeyboardDictationService``.
     enum ServiceError: Error {
         
         /// The dictation service is disabled.

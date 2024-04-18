@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2023-01-05.
-//  Copyright © 2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2023-2024 Daniel Saidi. All rights reserved.
 //
 
 import Foundation
@@ -46,18 +46,18 @@ public extension InterfaceOrientation {
     /// Whether or not the orientation is landscape.
     var isLandscape: Bool {
         switch self {
-        case .portrait, .portraitUpsideDown: return false
-        case .landscape, .landscapeLeft, .landscapeRight: return true
-        case .unknown: return false
+        case .portrait, .portraitUpsideDown: false
+        case .landscape, .landscapeLeft, .landscapeRight: true
+        case .unknown: false
         }
     }
 
     /// Whether or not the orientation is portrait.
     var isPortrait: Bool {
         switch self {
-        case .portrait, .portraitUpsideDown: return true
-        case .landscape, .landscapeLeft, .landscapeRight: return false
-        case .unknown: return false
+        case .portrait, .portraitUpsideDown: true
+        case .landscape, .landscapeLeft, .landscapeRight: false
+        case .unknown: false
         }
     }
 }

@@ -11,21 +11,17 @@ import SwiftUI
 
 public extension KeyboardLayout {
     
-    /**
-     A keyboard layout items specifies an action, a size and
-     optional insets for a key on a layout-based keyboard.
-     */
-    struct Item: Equatable, KeyboardLayoutRowIdentifiable {
+    /// A keyboard layout items defines an action, size, and
+    /// optional insets for a key on a layout-based keyboard.
+    struct Item: Equatable, KeyboardLayoutIdentifiable {
         
-        /**
-         Create a new layout item.
-         
-         - Parameters:
-           - action: The keyboard action to use.
-           - size: The layout size to use.
-           - alignment: The content alignment, by default `.center`.
-           - edgeInsets: The edge insets to apply, by default none.
-         */
+        /// Create a new layout item.
+        ///
+        /// - Parameters:
+        ///   - action: The keyboard action to use.
+        ///   - size: The layout size to use.
+        ///   - alignment: The content alignment, by default `.center`.
+        ///   - edgeInsets: The edge insets to apply, by default none.
         public init(
             action: KeyboardAction,
             size: ItemSize,
@@ -57,21 +53,32 @@ public extension KeyboardLayout {
 
 public extension KeyboardLayout.Item {
     
-    /**
-     Get the item's width in points, given a total row width
-     (most often the width of the screen) and an input width.
-     */
+    /// Get an item width in points, given a total row width
+    /// (most often the screen width) and an input width.
     func width(
         forRowWidth rowWidth: Double,
         inputWidth: Double
     ) -> Double? {
-        let insets = edgeInsets.leading + edgeInsets.trailing
+        width(
+            forRowWidth: rowWidth,
+            inputWidth: inputWidth,
+            edgeInsets: edgeInsets.leading + edgeInsets.trailing
+        )
+    }
+    
+    /// Get an item width in points, given a total row width
+    /// (most often screen width), input width and insets.
+    func width(
+        forRowWidth rowWidth: Double,
+        inputWidth: Double,
+        edgeInsets insets: Double
+    ) -> Double? {
         switch size.width {
-        case .available: return nil
-        case .input: return inputWidth - insets
-        case .inputPercentage(let percent): return percent * inputWidth - insets
-        case .percentage(let percent): return percent * rowWidth - insets
-        case .points(let points): return points - insets
+        case .available: nil
+        case .input: inputWidth - insets
+        case .inputPercentage(let percent): percent * inputWidth - insets
+        case .percentage(let percent): percent * rowWidth - insets
+        case .points(let points): points - insets
         }
     }
 }
@@ -120,5 +127,14 @@ public extension KeyboardLayout {
         
         /// A fixed width in points.
         case points(_ points: CGFloat)
+    }
+}
+
+public extension KeyboardLayout {
+    
+    /// Get the item row, if any at a certain row index.
+    func itemRow(at rowIndex: Int) -> ItemRow? {
+        guard rowIndex > 0 && rowIndex < itemRows.count else { return nil }
+        return itemRows[rowIndex]
     }
 }

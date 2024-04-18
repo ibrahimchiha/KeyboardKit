@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-02-25.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
@@ -90,26 +90,19 @@ public extension KKL10n {
     }
 }
 
-struct KKL10n_Previews: PreviewProvider {
+#Preview {
     
-    static let context: KeyboardContext = {
-        let context = KeyboardContext.preview
-        context.locale = KeyboardLocale.norwegian.locale
-        return context
-    }()
-    
-    static var previews: some View {
-        NavigationView {
-            List {
-                ForEach(KKL10n.allCases) { item in
-                    VStack(alignment: .leading, spacing: 10) {
-                        VStack(alignment: .leading) {
-                            Text("default: \(item.text)")
-                            Text("context: \(item.text(for: context))")
-                        }.font(.footnote)
-                    }.padding(.vertical, 4)
-                }
-            }.navigationTitle("Translations")
-        }
+    NavigationView {
+        List {
+            ForEach(KKL10n.allCases) { item in
+                VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading) {
+                        Text("default: \(item.text)")
+                        Text("english: \(item.text(for: .english))")
+                        Text("locale: \(item.text(for: .norwegian))")
+                    }.font(.footnote)
+                }.padding(.vertical, 4)
+            }
+        }.navigationTitle("Translations")
     }
 }

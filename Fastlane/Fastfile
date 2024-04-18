@@ -4,31 +4,64 @@ default_platform :ios
 
 platform :ios do
 
-  library_name = "KeyboardKit"
+  name = "KeyboardKit"
   main_branch = "master"
-  build_folder_docs = ".build/docs"
 
 
   # EmojiKit ===================
-  
-  ek_dest = "Sources/" + library_name + "/Emojis/"
-  ek_source = "../emojikitsource/Sources/EmojiKit/"
+    
+  ek_source = "../emojikit/Sources/EmojiKit/"
+  ek_target = "Sources/" + name + "/Emojis/EmojiKit/"
 
   desc "Remove EmojiKit"
   lane :ekremove do
-    ensure_git_status_clean
-    sh("cd .. && rm -rf " + ek_dest + "Emoji.swift")
-    sh("cd .. && rm -rf " + ek_dest + "Extensions")
+    sh("cd .. && rm -rf " + ek_target)
+  end
+
+  desc "Add EmojiKit"
+  lane :ekadd do
+    sh("cd .. && cp -r " + ek_source + " " + ek_target)
+    sh("cd .. && rm -rf " + ek_target + "/Bundle")
+    sh("cd .. && rm -rf " + ek_target + "/EmojiKit.docc")
+    sh("cd .. && rm -rf " + ek_target + "/Resources")
+    sh("cd .. && rm -rf " + ek_target + "/Views")
+    sh("cd .. && git add .")
   end
 
   desc "Update EmojiKit"
   lane :ekupdate do
+    ensure_git_status_clean
     ekremove
-    sh("cd .. && rm -rf Sources/" + library_name + "/Bundle/Bundle+Locale.swift")
-    sh("cd .. && cp -r " + ek_source + "Emoji.swift " + ek_dest)
-    sh("cd .. && cp -r " + ek_source + "Extensions " + ek_dest)
-    sh("cd .. && cp -r  " + ek_source + "/Bundle/Bundle+Locale.swift Sources/" + library_name + "/Bundle")
+    ekadd
     git_commit(path: "*", message: "Update EmojiKit")
+  end
+
+
+  # Build ==================
+  
+  lane :build do |options|
+    platform = options[:platform]
+    sh("cd .. && xcodebuild -scheme " + name + " -derivedDataPath .build -destination 'generic/platform=" + platform + "';")
+  end
+  
+  lane :build_all do
+    build(platform: "iOS")
+    build(platform: "OS X")
+    build(platform: "tvOS")
+    build(platform: "watchOS")
+    build(platform: "xrOS")
+  end
+
+
+  # Test ==================
+  
+  lane :test do |options|
+    destination = options[:destination]
+    sh("cd .. && xcodebuild test -scheme " + name + " -derivedDataPath .build -destination '" + destination + "' -enableCodeCoverage YES;")
+  end
+  
+  lane :test_all do
+    test(destination: "platform=iOS Simulator,name=iPhone 15,OS=17.2")
   end
 
 
@@ -36,72 +69,23 @@ platform :ios do
 
   desc "Create a new version"
   lane :version do |options|
-    ensure_git_status_clean
-    ensure_git_branch(branch: main_branch)
-    version_build
+    version_validate
 
-    bump_type = options[:type]
-    version = version_bump_podspec(
-      path: 'Version',
-      bump_type: bump_type)
-
+    type = options[:type]
+    version = version_bump_podspec(path: 'Version', bump_type: type)
     git_commit(path: "*", message: "Bump to #{version}")
     add_git_tag(tag: version)
     push_git_tags()
     push_to_git_remote()
   end
   
-  desc "Build a new version"
-  lane :version_build do
+  desc "Validate that the repo is valid for release"
+  lane :version_validate do
+    ensure_git_status_clean
+    ensure_git_branch(branch: main_branch)
     swiftlint(strict: true)
-    sh("swift test")
-    docc
-  end
-
-
-  # Docs =======================
-
-  desc "Build documentation for all platforms"
-  lane :docc do
-    sh('cd .. && rm -rf ' + build_folder_docs)
-    docc_platform(destination: 'iOS', name: 'ios')
-    docc_platform(destination: 'OS X', name: 'osx')
-    docc_platform(destination: 'tvOS', name: 'tvos')
-    docc_platform(destination: 'watchOS', name: 'watchos')
-    docc_web_platform(name: 'ios')
-    docc_web_platform(name: 'osx')
-    docc_web_platform(name: 'tvos')
-    docc_web_platform(name: 'watchos')
-  end
-
-  desc "Build documentation for a single platform"
-  lane :docc_platform do |values|
-    sh('cd .. && mkdir -p ' + build_folder_docs)
-    docc_delete_derived_data(lib: library_name)
-    sh('cd .. && xcodebuild docbuild \
-      -scheme ' + library_name + ' \
-      -destination \'generic/platform=' + values[:destination] + '\'')
-    sh('cd .. && \
-      find ~/Library/Developer/Xcode/DerivedData \
-      -name "' + library_name + '.doccarchive" \
-      -exec cp -R {} ' + build_folder_docs + ' \;')
-    sh('cd .. && \
-      mv ' + build_folder_docs + '/' + library_name + '.doccarchive ' + build_folder_docs + '/' + library_name + '_' + values[:name] + '.doccarchive')
-  end
-
-  desc "Delete documentation derived data (may be historic duplicates)"
-  lane :docc_delete_derived_data do
-    sh('find ~/Library/Developer/Xcode/DerivedData \
-      -name "' + library_name + '.doccarchive" \
-      -exec rm -Rf {} \; || true')
-  end
-
-  desc "Build static documentation website for a single platform"
-  lane :docc_web_platform do |values|
-    sh('cd .. && $(xcrun --find docc) process-archive \
-      transform-for-static-hosting ' + build_folder_docs + '/' + library_name + '_' + values[:name] + '.doccarchive \
-      --output-path  ' + build_folder_docs + '/web_' + values[:name] + ' \
-      --hosting-base-path ' + library_name + '')
+    build_all
+    test_all
   end
 
 end

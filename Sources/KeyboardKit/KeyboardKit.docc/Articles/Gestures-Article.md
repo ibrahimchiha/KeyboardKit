@@ -2,46 +2,49 @@
 
 This article describes the KeyboardKit gesture engine.
 
-iOS keyboards use many gestures. For instance, keys can be pressed and released, space can be long pressed to move the cursor, shift can be double tapped to toggle caps-lock, etc.
+@Metadata {
+    
+    @PageImage(
+        purpose: card,
+        source: "Page",
+        alt: "Page icon"
+    )
+    
+    @PageColor(blue)
+}
 
-These gestures can be complicated to manage, but KeyboardKit provides you with handy views and extensions, and handles most gestures with the ``KeyboardActionHandler`` concept.
+Native iOS keyboards use more gestures than you probably realize at first. For instance, keys can be pressed, released, long pressed, etc., space can be dragged to move the cursor, shift can be double tapped to toggle caps-lock, etc.
+
+These gestures can be complicated to set up, but KeyboardKit provides you with handy views and extensions to easily be able to define rich gesture actions that are handled by the ``KeyboardActionHandler``, or any custom actions that you specify.
 
 
 
 ## Gestures namespace
 
-KeyboardKit has a ``Gestures`` namespace that contains gesture-related types.
-
-For instance, a ``Gestures/GestureButton`` can be used to apply many gestures to a single button, a ``Gestures/RepeatTimer`` can be used to repeat an action, etc.
-
-This namespace doesn't have protocols, open classes, or types that are meant to be top-level.
+KeyboardKit has a ``Gestures`` namespace with gesture-related types, like ``Gestures/GestureButton``, ``Gestures/ScrollViewGestureButton``, etc.
 
 
 
 ## Keyboard gestures
 
-KeyboardKit has a ``Gestures/KeyboardGesture`` enum that defines keyboard gestures:
+KeyboardKit has a ``Gestures/KeyboardGesture`` enum that defines supported keyboard gestures, like ``Gestures/KeyboardGesture/press``, ``Gestures/KeyboardGesture/release``, ``Gestures/KeyboardGesture/doubleTap``, etc.
 
-* ``Gestures/KeyboardGesture/press``
-* ``Gestures/KeyboardGesture/release``
-* ``Gestures/KeyboardGesture/doubleTap``
-* ``Gestures/KeyboardGesture/longPress``
-* ``Gestures/KeyboardGesture/repeatPress``
-
-These gestures are used within the library, e.g. to handle ``KeyboardAction``s in various ways.
+These gestures are used within the library, e.g. to handle ``KeyboardAction``s in various ways. The built in gestures can also provide drag information when a user presses and drags a view.
 
 
 
 ## Keyboard gestures view modifier
 
-You can use the **.keyboardButtonGestures(...)** view modifier to apply keyboard gestures:
+You can use the ``SwiftUI/View/keyboardButtonGestures(for:actionHandler:calloutContext:isPressed:isInScrollView:releaseOutsideTolerance:)`` view modifier to apply keyboard gestures:
 
 ```swift
 Text("😀")
-    .keyboardButtonGestures(for: .emoji("😀"), ...)
+    .keyboardButtonGestures(
+        for: .emoji("😀"), 
+        doubleTapAction: { ... },
+        ...
+    )
 ```
-
-You can provide a ``KeyboardActionHandler`` and an optional ``CalloutContext`` to make the button use the KeyboardKit engine, or provide separate actions for every gesture.
 
 
 
@@ -53,4 +56,4 @@ KeyboardKit has a ``DragGestureHandler`` protocol that handles drag gestures. Fo
 
 ## Views
 
-KeyboardKit has a ``Gestures/GestureButton`` and a ``Gestures/ScrollViewGestureButton`` that can be used to apply many gestures to the same button.
+KeyboardKit has a ``Gestures/GestureButton`` & ``Gestures/ScrollViewGestureButton`` that can be used to apply many gestures to the same button.

@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2019-07-04.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 #if os(iOS) || os(tvOS)
@@ -153,7 +153,7 @@ class UITextDocumentProxy_CurrentWordTests: XCTestCase {
 
 
     func prepareNoPostCursorPart() {
-        proxy.documentContextBeforeInput = "this a text"
+        proxy.documentContextBeforeInput = "this is díacrïtics"
         proxy.replaceCurrentWord(with: "replacement")
     }
 
@@ -167,7 +167,7 @@ class UITextDocumentProxy_CurrentWordTests: XCTestCase {
     func testReplacingCurrentWordWithNoPostCustorPartDeletesBackwardsCurrentWordCountTimes() {
         prepareNoPostCursorPart()
         let calls = proxy.calls(to: \.deleteBackwardRef)
-        XCTAssertEqual(calls.count, 4)
+        XCTAssertEqual(calls.count, 10)
     }
 
     func testReplacingCurrentWordWithNoPostCustorPartInsertsReplacementText() {

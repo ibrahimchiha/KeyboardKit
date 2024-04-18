@@ -3,105 +3,115 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-03-18.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
 
 public extension Autocomplete {
     
-    /**
-     This view mimics a native autocomplete toolbar item.
-     
-     It will by default look like a native toolbar item, but
-     can be styled using the provided `style`.
-     */
+    /// This view mimics a native autocomplete toolbar item.
+    ///
+    /// You can style this component with the style modifier
+    /// ``autocompleteToolbarItemStyle(_:)``.
     struct ToolbarItem: View {
         
-        /**
-         Create an autocomplete toolbar item.
-         
-         - Parameters:
-           - suggestion: The suggestion to display in the view.
-           - locale: The locale to use, by default `.current`.
-           - style: The style to apply, by default `.standard`.
-         */
+        /// Create an autocomplete toolbar item.
+        ///
+        /// - Parameters:
+        ///   - suggestion: The suggestion to display.
+        ///   - locale: The locale to use, by default `.current`.
         public init(
             suggestion: Autocomplete.Suggestion,
-            locale: Locale = .current,
-            style: KeyboardStyle.AutocompleteToolbarItem = .standard
+            locale: Locale = .current
         ) {
             self.suggestion = suggestion
             self.locale = locale
-            self.style = style
+            self.initStyle = nil
         }
         
         private let suggestion: Suggestion
         private let locale: Locale
-        private let style: KeyboardStyle.AutocompleteToolbarItem
+        
+        @Environment(\.autocompleteToolbarItemStyle)
+        private var envStyle
         
         public var body: some View {
             VStack(spacing: 0) {
-                text
+                title
                 subtitle
             }
+            .padding(.horizontal, style.horizontalPadding)
+            .padding(.vertical, style.verticalPadding)
+            .background(style.backgroundColor)
+            .background(Color.clearInteractable)
+            .cornerRadius(style.backgroundCornerRadius)
+            .autocompleteToolbarItemStyle(style)    // Deprecated: Remove in 9.0
         }
+        
+        // MARK: - Deprecated
+        
+        @available(*, deprecated, message: "Use .autocompleteToolbarItemStyle to apply the style instead.")
+        public init(
+            suggestion: Autocomplete.Suggestion,
+            locale: Locale = .current,
+            style: Autocomplete.ToolbarItemStyle
+        ) {
+            self.suggestion = suggestion
+            self.locale = locale
+            self.initStyle = style
+        }
+        
+        private typealias Style = Autocomplete.ToolbarItemStyle
+        private let initStyle: Style?
+        private var style: Style { initStyle ?? envStyle }
     }
 }
 
 private extension Autocomplete.ToolbarItem {
     
-    var text: some View {
-        Autocomplete.ToolbarItemTitle(
-            suggestion: suggestion,
-            locale: locale,
-            style: style
-        )
+    var title: some View {
+        Text(titleText)
+            .lineLimit(1)
+            .font(style.titleFont.font)
+            .foregroundColor(style.titleColor)
+            .frame(maxWidth: .infinity)
     }
     
+    var titleText: String {
+        if !suggestion.isUnknown { return suggestion.title }
+        let beginDelimiter = locale.quotationBeginDelimiter ?? "\""
+        let endDelimiter = locale.quotationEndDelimiter ?? "\""
+        return "\(beginDelimiter)\(suggestion.title)\(endDelimiter)"
+    }
+    
+    @ViewBuilder
     var subtitle: some View {
-        Autocomplete.ToolbarItemSubtitle(
-            suggestion: suggestion,
-            style: style
-        )
+        if let subtitle = suggestion.subtitle {
+            Text(subtitle)
+                .lineLimit(1)
+                .font(style.subtitleFont.font)
+                .foregroundColor(style.subtitleColor)
+        }
     }
 }
 
-struct Autocomplete_ToolbarItem_Previews: PreviewProvider {
+#Preview {
     
-    static var previews: some View {
-        ScrollView(.vertical) {
-            VStack(spacing: 20) {
-                ForEach(KeyboardLocale.allCases) {
-                    preview(for: $0.locale)
-                }
-            }.padding()
-        }
-    }
-    
-    static func preview(for locale: Locale) -> some View {
-        VStack(spacing: 5) {
-            Text(locale.identifier).font(.headline)
-            AutocompleteToolbar(
-                suggestions: previewSuggestions,
-                locale: locale,
-                style: .standard,
-                suggestionAction: { _ in}
-            ).previewBar()
-        }
-    }
-    
-    static let previewSuggestions: [Autocomplete.Suggestion] = [
+    let suggestions: [Autocomplete.Suggestion] = [
         .init(text: "Foo", isUnknown: true),
         .init(text: "Bar", isAutocorrect: true),
         .init(text: "", title: "Baz", subtitle: "Recommended")]
-}
-
-private extension View {
     
-    func previewBar() -> some View {
-        self.padding(5)
-            .background(Color.gray.opacity(0.3))
-            .cornerRadius(10)
+    return HStack {
+        HStack {
+            ForEach(suggestions, id: \.text) {
+                Autocomplete.ToolbarItem(suggestion: $0)
+            }
+        }
     }
+    .padding(5)
+    .background(Color.gray.opacity(0.3))
+    .cornerRadius(10)
+    .padding()
 }

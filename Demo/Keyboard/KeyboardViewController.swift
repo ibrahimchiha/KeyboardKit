@@ -3,26 +3,25 @@
 //  Keyboard
 //
 //  Created by Daniel Saidi on 2021-02-11.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import KeyboardKit
 import SwiftUI
 
-/**
- This keyboard demonstrates how to setup KeyboardKit and how
- to customize the standard configuration.
-
- To use this keyboard, you must enable it in system settings
- ("Settings/General/Keyboards"). It needs full access to get
- access to features like haptic feedback.
- */
+/// This keyboard demonstrates how to set up KeyboardKit and
+/// customize the standard configuration.
+///
+/// To use the keyboard, simply enable it in System Settings,
+/// then switch to it when you type in the demo (or any) app.
+///
+/// > Important: This keyboard needs full access to use some
+/// features, like haptic feedback.
 class KeyboardViewController: KeyboardInputViewController {
 
-    /**
-     This function is called when the controller loads. Here,
-     we make demo-specific service configurations.
-     */
+    /// This function is called when the controller launches.
+    ///
+    /// Here, we make demo-specific service keyboard configs.
     override func viewDidLoad() {
         
         /// 💡 Setup a demo-specific action handler.
@@ -34,7 +33,7 @@ class KeyboardViewController: KeyboardInputViewController {
             keyboardContext: state.keyboardContext,
             keyboardBehavior: services.keyboardBehavior,
             autocompleteContext: state.autocompleteContext,
-            feedbackConfiguration: state.feedbackConfiguration,
+            feedbackContext: state.feedbackContext,
             spaceDragGestureHandler: services.spaceDragGestureHandler)
         
         /// 💡 Setup a fake autocomplete provider.
@@ -49,7 +48,7 @@ class KeyboardViewController: KeyboardInputViewController {
         ///
         /// The demo provider adds "keyboard" callout action
         /// buttons to the "k" key.
-        services.calloutActionProvider = StandardCalloutActionProvider(
+        services.calloutActionProvider = Callouts.StandardActionProvider(
             keyboardContext: state.keyboardContext,
             baseProvider: DemoCalloutActionProvider())
         
@@ -84,7 +83,7 @@ class KeyboardViewController: KeyboardInputViewController {
         ///
         /// Since dictation is not available by default, the
         /// dictation button is removed if we don't set this.
-        state.keyboardContext.keyboardDictationReplacement = .character("$")
+        state.keyboardContext.keyboardDictationReplacement = .character("😀")
         
         /// 💡 Configure the space long press behavior.
         ///
@@ -93,33 +92,31 @@ class KeyboardViewController: KeyboardInputViewController {
         state.keyboardContext.spaceLongPressBehavior = .moveInputCursor
         // state.keyboardContext.spaceLongPressBehavior = .openLocaleContextMenu
         
-        /// 💡 Setup audio and haptic feedback.
+        /// 💡 Setup haptic and audio feedback.
         ///
-        /// The code below enabled haptic feedback and plays
-        /// a rocket sound when a rocket button is tapped.
-        state.feedbackConfiguration.isHapticFeedbackEnabled = true
-        state.feedbackConfiguration.audio.actions = [
-            .init(action: .character("🚀"), feedback: .custom(id: 1303))
-        ]
-        
-        // state.feedbackConfiguration.disableAudioFeedback()
-        // state.feedbackConfiguration.disableHapticFeedback()
+        /// The code below enables audio and haptic feedback,
+        /// then sets up custom audio for the rocket button.
+        let feedback = state.feedbackContext
+        feedback.audioConfiguration = .enabled
+        feedback.hapticConfiguration = .enabled
+        feedback.register(.haptic(.selection, for: .repeat, on: .rocket))
+        feedback.register(.audio(.rocketFuse, for: .press, on: .rocket))
+        feedback.register(.audio(.rocketLaunch, for: .release, on: .rocket))
         
         /// 💡 Call super to perform the base initialization.
         super.viewDidLoad()
     }
 
-    /**
-     This function is called whenever the keyboard should be
-     created or updated.
-     */
+    /// This function is called whenever the keyboard should
+    /// be created or updated.
+    ///
+    /// Here, we just create a standard system keyboard like
+    /// the library does it, just to show how it's done. You
+    /// can customize anything you want.
     override func viewWillSetupKeyboard() {
         super.viewWillSetupKeyboard()
 
         /// 💡 Make the demo use a standard ``SystemKeyboard``.
-        ///
-        /// This is not needed if you want to use a standard
-        /// view, but this is how you can setup a custom one.
         setup { controller in
             SystemKeyboard(
                 state: controller.state,

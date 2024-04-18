@@ -3,20 +3,15 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-01-20.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import SwiftUI
 
 public extension Color {
 
-    /**
-     This color can be used instead of `.clear` if the color
-     should be registering touches and gestures.
-
-     This will be phased out. Instead of this, use a content
-     shape within buttons and views that use touches.
-     */
+    /// This color can be used instead of `clear` to make it
+    /// register touches & gestures.
     static var clearInteractable: Color {
         Color.white.opacity(0.001)
     }
@@ -144,9 +139,9 @@ private extension Color {
     }
 }
 
-struct Color_KeyboardKit_Previews: PreviewProvider {
+#Preview {
     
-    static func preview(for color: Color, name: String) -> some View {
+    func preview(for color: Color, name: String) -> some View {
         VStack(alignment: .leading) {
             Text(name).font(.footnote)
             HStack(spacing: 0) {
@@ -158,29 +153,29 @@ struct Color_KeyboardKit_Previews: PreviewProvider {
         }
     }
     
-    static var previews: some View {
-        ScrollView {
-            VStack {
-                Group {
-                    preview(for: .keyboardBackground, name: "keyboardBackground")
-                    preview(for: .keyboardBackgroundForDarkAppearance, name: "keyboardBackgroundForDarkAppearance")
-                }
-                Group {
-                    preview(for: .keyboardButtonBackground, name: "keyboardButtonBackground")
-                    preview(for: .keyboardButtonBackgroundForColorSchemeBug, name: "keyboardButtonBackgroundForColorSchemeBug")
-                    preview(for: .keyboardButtonBackgroundForDarkAppearance, name: "keyboardButtonBackgroundForDarkAppearance")
-                    preview(for: .keyboardButtonForeground, name: "keyboardButtonForeground")
-                    preview(for: .keyboardButtonForegroundForDarkAppearance, name: "keyboardButtonForegroundForDarkAppearance")
-                    preview(for: .keyboardButtonShadow, name: "keyboardButtonShadow")
-                }
-                Group {
-                    preview(for: .keyboardDarkButtonBackground, name: "keyboardDarkButtonBackground")
-                    preview(for: .keyboardDarkButtonBackgroundForColorSchemeBug, name: "keyboardDarkButtonBackgroundForColorSchemeBug")
-                    preview(for: .keyboardDarkButtonBackgroundForDarkAppearance, name: "keyboardDarkButtonBackgroundForDarkAppearance")
-                    preview(for: .keyboardDarkButtonForeground, name: "keyboardDarkButtonForeground")
-                    preview(for: .keyboardDarkButtonForegroundForDarkAppearance, name: "keyboardDarkButtonForegroundForDarkAppearance")
-                }
-            }.padding()
-        }.background(Color.black.opacity(0.1).edgesIgnoringSafeArea(.all))
+    return ScrollView {
+        VStack {
+            Group {
+                preview(for: .keyboardBackground, name: "keyboardBackground")
+                preview(for: .keyboardBackgroundForDarkAppearance, name: "keyboardBackgroundForDarkAppearance")
+            }
+            Group {
+                preview(for: .keyboardButtonBackground, name: "keyboardButtonBackground")
+                preview(for: .keyboardButtonBackgroundForColorSchemeBug, name: "keyboardButtonBackgroundForColorSchemeBug")
+                preview(for: .keyboardButtonBackgroundForDarkAppearance, name: "keyboardButtonBackgroundForDarkAppearance")
+                preview(for: .keyboardButtonForeground, name: "keyboardButtonForeground")
+                preview(for: .keyboardButtonForegroundForDarkAppearance, name: "keyboardButtonForegroundForDarkAppearance")
+                preview(for: .keyboardButtonShadow, name: "keyboardButtonShadow")
+            }
+            Group {
+                preview(for: .keyboardDarkButtonBackground, name: "keyboardDarkButtonBackground")
+                preview(for: .keyboardDarkButtonBackgroundForColorSchemeBug, name: "keyboardDarkButtonBackgroundForColorSchemeBug")
+                preview(for: .keyboardDarkButtonBackgroundForDarkAppearance, name: "keyboardDarkButtonBackgroundForDarkAppearance")
+                preview(for: .keyboardDarkButtonForeground, name: "keyboardDarkButtonForeground")
+                preview(for: .keyboardDarkButtonForegroundForDarkAppearance, name: "keyboardDarkButtonForegroundForDarkAppearance")
+            }
+        }
+        .padding()
     }
+    .background(Color.black.opacity(0.1).edgesIgnoringSafeArea(.all))
 }

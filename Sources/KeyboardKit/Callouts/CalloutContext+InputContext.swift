@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-01-06.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import Combine
@@ -12,17 +12,13 @@ import SwiftUI
 
 public extension CalloutContext {
     
-    /**
-     This type can be used as input callout state.
-     */
+    /// This class has observable input callout state.
     class InputContext: ObservableObject {
         
-        /**
-         Create a new input callout context instance.
-         
-         - Parameters:
-         - isEnabled: Whether or not callouts are enabled.
-         */
+        /// Create an input callout context instance.
+        ///
+        /// - Parameters:
+        ///   - isEnabled: Whether or not input callouts are enabled.
         public init(isEnabled: Bool) {
             self.isEnabled = isEnabled
         }
@@ -97,6 +93,7 @@ public extension CalloutContext.InputContext {
         self.buttonFrame = geo.frame(in: .named(coordinateSpace))
     }
 }
+
 
 // MARK: - Context Builders
 

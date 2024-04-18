@@ -8,21 +8,21 @@
 
 import Foundation
 
-/**
- This enum defines keyboard-specific actions that correspond
- to actions that can be found on various keyboards.
- 
- Keyboard actions can be bound to buttons and triggered with
- a ``KeyboardActionHandler``. They are also used by keyboard
- layouts and other parts of the library, as declarative ways
- to describe various parts of the keyboard without having to
- specify how the actions will be executed.
-
- The documentation for each action type describes the type's
- standard behavior, if any. Types that don't have a standard
- behavior require a custom ``KeyboardActionHandler`` to have
- any effect when the user interacts with them.
- */
+/// This enum defines keyboard-specific actions, and is also
+/// serving as a namespace for keyboard action-related types.
+///
+/// Some actions are ``KeyboardAction/character(_:)``, which
+/// inserts text, ``KeyboardAction/keyboardType(_:)``, which
+/// switches keyboard type, etc.
+///
+/// The idea with these keyboard actions is that they can be
+/// used to triggered keyboard-related operations, e.g. when
+/// tapping a button, or when certain events happen. You can
+/// trigger actions with a ``KeyboardActionHandler``.
+///
+/// The documentation for each action describes the standard
+/// behavior, if any. Types that without a standard behavior
+/// require a custom ``KeyboardActionHandler`` to be handled.
 public enum KeyboardAction: Codable, Equatable {
 
     /// Deletes backwards when pressed, and repeats until released.
@@ -105,6 +105,9 @@ public enum KeyboardAction: Codable, Equatable {
     
     /// Inserts a tab when released.
     case tab
+    
+    /// Inserts a text string when released.
+    case text(String)
 
     /// Open an url when released, using a custom id for identification.
     case url(_ url: URL?, id: String? = nil)
@@ -147,12 +150,10 @@ public extension KeyboardAction {
         }
     }
     
-    /**
-     Whether or not the action is an input action.
-
-     An input action inserts content into the text proxy and
-     is by default rendered as a light button.
-     */
+    /// Whether or not the action is an input action.
+    ///
+    /// Input actions insert content into the text proxy and
+    /// are by default rendered as light buttons.
     var isInputAction: Bool {
         switch self {
         case .character: true
@@ -161,16 +162,15 @@ public extension KeyboardAction {
         case .image: true
         case .space: true
         case .systemImage: true
+        case .text: true
         default: false
         }
     }
     
-    /**
-     Whether or not the action is a primary action.
-
-     A primary action inserts a new line into the proxy, but
-     the button can rendered differently to express intent.
-     */
+    /// Whether or not the action is a primary action.
+    ///
+    /// Primary actions insert new lines into the proxy, but
+    /// can be rendered differently to express intent.
     var isPrimaryAction: Bool {
         switch self {
         case .primary: true
@@ -216,6 +216,7 @@ public extension KeyboardAction {
         case .shift: true
         case .settings: true
         case .tab: true
+        case .url: true
         default: false
         }
     }
@@ -242,12 +243,7 @@ public extension KeyboardAction {
 
 public extension KeyboardAction {
     
-    /**
-     The standard accessibility label for the action.
-     
-     This should be localized or at least use KKL10n to make
-     it easier to localize it in the future.
-     */
+    /// The standard accessibility label for the action.
     var standardAccessibilityLabel: String? {
         switch self {
         case .backspace: "Backspace"
@@ -277,6 +273,7 @@ public extension KeyboardAction {
         case .systemImage(let desc, _, _): desc
         case .systemSettings: "System Settings"
         case .tab: "Tab"
+        case .text(let text): text
         case .url(let url, _): "Open \(url?.absoluteString ?? "invalid url")"
         }
     }

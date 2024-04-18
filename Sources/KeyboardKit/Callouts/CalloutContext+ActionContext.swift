@@ -3,7 +3,7 @@
 //  KeyboardKit
 //
 //  Created by Daniel Saidi on 2021-01-06.
-//  Copyright © 2021-2023 Daniel Saidi. All rights reserved.
+//  Copyright © 2021-2024 Daniel Saidi. All rights reserved.
 //
 
 import Combine
@@ -11,20 +11,14 @@ import SwiftUI
 
 public extension CalloutContext {
     
-    /**
-     This type can be used as action callout state.
-     
-     The tap action and action provider can be changed later.
-     */
+    /// This class has observable action callout state.
     class ActionContext: ObservableObject {
         
-        /**
-         Create a new action callout context instance.
-         
-         - Parameters:
-           - actionProvider: The action provider to use, if any.
-           - tapAction: The action to perform when tapping an action.
-         */
+        /// Create an action callout context instance.
+        ///
+        /// - Parameters:
+        ///   - actionProvider: The action provider to use, if any.
+        ///   - tapAction: The action to perform when tapping an action.
         public init(
             actionProvider: CalloutActionProvider?,
             tapAction: @escaping (KeyboardAction) -> Void
@@ -61,7 +55,6 @@ public extension CalloutContext {
         @Published
         public private(set) var selectedIndex: Int = -1
     }
-    
 }
 
 
@@ -108,7 +101,7 @@ public extension CalloutContext.ActionContext {
     
     /// Trigger haptic feedback for selection change.
     func triggerHapticFeedbackForSelectionChange() {
-        HapticFeedback.selectionChanged.trigger()
+        Feedback.Haptic.selectionChanged.trigger()
     }
     
     /// Update the input actions for a certain action.
@@ -129,7 +122,7 @@ public extension CalloutContext.ActionContext {
         if shouldReset(for: value) { return reset() }
         guard shouldUpdateSelection(for: value) else { return }
         let translation = value.width
-        let standardStyle = KeyboardStyle.ActionCallout.standard
+        let standardStyle = Callouts.ActionCalloutStyle.standard
         let maxButtonSize = standardStyle.maxButtonSize
         let buttonSize = buttonFrame.size.limited(to: maxButtonSize)
         let indexWidth = 0.9 * buttonSize.width
